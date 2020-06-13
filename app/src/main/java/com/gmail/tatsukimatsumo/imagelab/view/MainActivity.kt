@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
         binding.viewModel = viewModel
 
         val viewManager = GridLayoutManager(this, 4)
-        val viewAdapter = PhotoAdapter(this, emptyList())
+        val viewAdapter = PhotoAdapter(emptyList())
         this.photoListView.apply {
             layoutManager = viewManager
             adapter = viewAdapter
