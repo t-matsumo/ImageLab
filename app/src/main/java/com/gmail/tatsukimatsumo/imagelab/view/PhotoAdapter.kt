@@ -19,7 +19,7 @@ RecyclerView.Adapter<PhotoAdapter.ItemHolder>() {
             Glide
                 .with(binding.root)
                 .load(photo.url)
-                .placeholder(ColorDrawable(Color.GRAY))
+                .placeholder(ColorDrawable(Color.LTGRAY))
                 .into(binding.imageView)
         }
     }
