@@ -3,4 +3,6 @@
     <string name="image_description">image</string>
     <string name="photo_permission_denied">画像へのアクセスが拒否されたので、画像を読み込めません。</string>
     <string name="photo_permission_description">画像へのアクセスを許可しないと、画像を読み込めません。</string>
+    <string name="add_image">画像追加</string>
+    <string name="refresh_image">再読み込み</string>
 </resources>

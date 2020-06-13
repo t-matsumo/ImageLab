@@ -24,4 +24,8 @@ class PhotoListViewModel(application: Application) : AndroidViewModel(applicatio
             photoList.value = useCase.getPhotos().map { Photo(it.uri) }
         }
     }
+
+    fun onTapRefreshImage() {
+
+    }
 }

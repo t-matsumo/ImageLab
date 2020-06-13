@@ -4,6 +4,8 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -57,6 +59,25 @@ class MainActivity : AppCompatActivity() {
                 val toast: Toast = Toast.makeText(this, getString(R.string.photo_permission_denied), Toast.LENGTH_SHORT)
                 toast.show()
             }
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.header_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.add_image -> {
+                true
+            }
+            R.id.refresh_image -> {
+                viewModel.onTapRefreshImage()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 }
