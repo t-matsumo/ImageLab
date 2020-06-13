@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.gmail.tatsukimatsumo.imagelab.model.datasource.PhotoContentsProviderClientRepository
+import com.gmail.tatsukimatsumo.imagelab.model.datasource.photodatabase.PhotoDatabaseRepository
 import com.gmail.tatsukimatsumo.imagelab.model.usecase.PhotoUseCase
 import kotlinx.coroutines.launch
 
@@ -17,15 +18,28 @@ class PhotoListViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     private val repository = PhotoContentsProviderClientRepository(application.applicationContext)
-    private val useCase = PhotoUseCase(repository)
+    private val indexRepository = PhotoDatabaseRepository(application.applicationContext)
+    private val useCase = PhotoUseCase(repository, indexRepository)
 
     fun onCreate() {
         viewModelScope.launch {
-            photoList.value = useCase.getPhotos().map { Photo(it.uri) }
+            photoList.value = getPhotos()
         }
     }
 
-    fun onTapRefreshImage() {
-
+    fun onTapCreateImageIndex() {
+        viewModelScope.launch {
+            useCase.refreshImageDatabase()
+            photoList.value = getPhotos()
+        }
     }
+
+    fun onTapDeleteImageIndex() {
+        viewModelScope.launch {
+            useCase.deleteImageIndex()
+            photoList.value = emptyList()
+        }
+    }
+
+    private suspend fun getPhotos() = useCase.getPhotos().map { Photo(it.uri) }
 }

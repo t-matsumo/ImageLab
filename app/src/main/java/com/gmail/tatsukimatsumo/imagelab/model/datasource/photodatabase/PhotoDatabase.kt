@@ -1,12 +1,11 @@
 package com.gmail.tatsukimatsumo.imagelab.model.datasource.photodatabase
 
 import android.content.Context
-import androidx.lifecycle.LiveData
 import androidx.room.*
 
 @Entity
 data class Photo(
-    @PrimaryKey val uid: Int,
+    @PrimaryKey(autoGenerate = true) val uid: Int,
     @ColumnInfo(name = "uri_string") val uriString: String
 )
 
@@ -17,6 +16,9 @@ interface PhotoDao {
 
     @Query("DELETE FROM photo")
     fun deleteAll()
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun addAll(photos: List<Photo>)
 }
 
 @Database(entities = [Photo::class], version = 1, exportSchema = false)

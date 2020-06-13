@@ -1,7 +1,6 @@
 package com.gmail.tatsukimatsumo.imagelab.view
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.Menu
@@ -70,11 +69,12 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.add_image -> {
+            R.id.delete_image_index -> {
+                viewModel.onTapDeleteImageIndex()
                 true
             }
-            R.id.refresh_image -> {
-                viewModel.onTapRefreshImage()
+            R.id.create_image_index -> {
+                viewModel.onTapCreateImageIndex()
                 true
             }
             else -> super.onOptionsItemSelected(item)
