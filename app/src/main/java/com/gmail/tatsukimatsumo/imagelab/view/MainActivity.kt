@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.gmail.tatsukimatsumo.imagelab.R
 import com.gmail.tatsukimatsumo.imagelab.databinding.ActivityMainBinding
@@ -35,6 +36,9 @@ class MainActivity : AppCompatActivity() {
             layoutManager = viewManager
             adapter = viewAdapter
         }
+        viewModel.photoList.observe(this, Observer { _ ->
+            photoListView.scrollToPosition(0)
+        })
 
         val requiredPermission = Manifest.permission.READ_EXTERNAL_STORAGE
         if (ContextCompat.checkSelfPermission(this,  requiredPermission) == PackageManager.PERMISSION_GRANTED) {
