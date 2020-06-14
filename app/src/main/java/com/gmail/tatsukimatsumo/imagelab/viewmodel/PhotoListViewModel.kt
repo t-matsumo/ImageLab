@@ -5,9 +5,10 @@ import android.net.Uri
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.gmail.tatsukimatsumo.imagelab.model.datasource.PhotoContentsProviderClientRepository
+import com.gmail.tatsukimatsumo.imagelab.model.datasource.photocontentsresolver.PhotoContentsProviderClientRepository
 import com.gmail.tatsukimatsumo.imagelab.model.datasource.photodatabase.PhotoDatabaseRepository
 import com.gmail.tatsukimatsumo.imagelab.model.usecase.PhotoUseCase
+import com.gmail.tatsukimatsumo.imagelab.model.usecase.PhotoUseCase.SortKey
 import kotlinx.coroutines.launch
 
 class PhotoListViewModel(application: Application) : AndroidViewModel(application) {
@@ -41,5 +42,17 @@ class PhotoListViewModel(application: Application) : AndroidViewModel(applicatio
         }
     }
 
-    private suspend fun getPhotos() = useCase.getPhotos().map { Photo(it.uri) }
+    fun sortByDateAdded() {
+        viewModelScope.launch {
+            photoList.value = getPhotos(SortKey.SORT_KEY_DATE_ADDED)
+        }
+    }
+
+    fun sortByDateAddedDesc() {
+        viewModelScope.launch {
+            photoList.value = getPhotos(SortKey.SORT_KEY_DATE_ADDED_DESC)
+        }
+    }
+
+    private suspend fun getPhotos(sortKey: SortKey = SortKey.SORT_KEY_NONE) = useCase.getPhotos(sortKey).map { Photo(it.uri) }
 }

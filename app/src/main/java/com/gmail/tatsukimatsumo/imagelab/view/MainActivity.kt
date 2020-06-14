@@ -77,6 +77,14 @@ class MainActivity : AppCompatActivity() {
                 viewModel.onTapCreateImageIndex()
                 true
             }
+            R.id.sort_by_date_added -> {
+                viewModel.sortByDateAdded()
+                true
+            }
+            R.id.sort_by_date_added_desc -> {
+                viewModel.sortByDateAddedDesc()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }

@@ -6,7 +6,8 @@ import androidx.room.*
 @Entity
 data class Photo(
     @PrimaryKey(autoGenerate = true) val uid: Int,
-    @ColumnInfo(name = "uri_string") val uriString: String
+    @ColumnInfo(name = "uri_string") val uriString: String,
+    @ColumnInfo(name = "date_added") val date_added: Int
 )
 
 @Dao
@@ -29,8 +30,7 @@ abstract class PhotoDatabase : RoomDatabase() {
         @Volatile private var INSTANCE: PhotoDatabase? = null
 
         fun getDatabase(context: Context): PhotoDatabase {
-            return INSTANCE
-                ?: synchronized(this) {
+            return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     PhotoDatabase::class.java,

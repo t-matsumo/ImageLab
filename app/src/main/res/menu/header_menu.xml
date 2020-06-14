@@ -6,4 +6,10 @@
     <item android:id="@+id/create_image_index"
         android:icon="@android:drawable/ic_search_category_default"
         android:title="@string/create_image_index" />
+    <item android:id="@+id/sort_by_date_added"
+        android:icon="@android:drawable/ic_search_category_default"
+        android:title="@string/sort_by_date_added" />
+    <item android:id="@+id/sort_by_date_added_desc"
+        android:icon="@android:drawable/ic_search_category_default"
+        android:title="@string/sort_by_date_added_desc" />
 </menu>
