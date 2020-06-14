@@ -17,6 +17,7 @@ import com.gmail.tatsukimatsumo.imagelab.R
 import com.gmail.tatsukimatsumo.imagelab.databinding.ActivityMainBinding
 import com.gmail.tatsukimatsumo.imagelab.viewmodel.PhotoListViewModel
 import kotlinx.android.synthetic.main.activity_main.*
+import org.opencv.android.OpenCVLoader
 
 class MainActivity : AppCompatActivity() {
     private val viewModel: PhotoListViewModel by viewModels()
@@ -25,6 +26,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        OpenCVLoader.initDebug()
 
         val binding: ActivityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.lifecycleOwner = this
@@ -87,6 +90,10 @@ class MainActivity : AppCompatActivity() {
             }
             R.id.sort_by_date_added_desc -> {
                 viewModel.sortByDateAddedDesc()
+                true
+            }
+            R.id.sort_by_norm -> {
+                viewModel.sortByNorm()
                 true
             }
             else -> super.onOptionsItemSelected(item)

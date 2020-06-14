@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="android.view.View"/>
         <variable name="viewModel" type="com.gmail.tatsukimatsumo.imagelab.viewmodel.PhotoListViewModel"/>
     </data>
 
@@ -23,6 +24,22 @@
             app:layout_constraintTop_toTopOf="parent"
             app:items="@{viewModel.photoList}"/>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:background="@android:color/darker_gray"
+            android:max="100"
+            android:progress="@{viewModel.loadProgress}"
+            android:visibility="@{viewModel.loadProgress == 100 ? View.GONE : View.VISIBLE}"
+            android:progressDrawable="@android:drawable/progress_horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

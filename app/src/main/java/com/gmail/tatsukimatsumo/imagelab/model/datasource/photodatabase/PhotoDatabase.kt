@@ -7,7 +7,8 @@ import androidx.room.*
 data class Photo(
     @PrimaryKey(autoGenerate = true) val uid: Int,
     @ColumnInfo(name = "uri_string") val uriString: String,
-    @ColumnInfo(name = "date_added") val date_added: Int
+    @ColumnInfo(name = "date_added") val date_added: Int,
+    @ColumnInfo(name = "norm") val norm: Int
 )
 
 @Dao

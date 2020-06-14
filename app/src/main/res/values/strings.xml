@@ -7,4 +7,5 @@
     <string name="create_image_index">画像の読み込み</string>
     <string name="sort_by_date_added">日付で昇順にソート</string>
     <string name="sort_by_date_added_desc">日付で降順にソート</string>
+    <string name="sort_by_norm">画像のノルムでソート</string>
 </resources>
