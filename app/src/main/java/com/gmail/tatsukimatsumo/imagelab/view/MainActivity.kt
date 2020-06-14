@@ -76,10 +76,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.delete_image_index -> {
-                viewModel.onTapDeleteImageIndex()
-                true
-            }
             R.id.create_image_index -> {
                 viewModel.onTapCreateImageIndex()
                 true

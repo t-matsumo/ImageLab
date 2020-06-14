@@ -28,7 +28,7 @@ class PhotoUseCase(
     }
 
     val progress: MutableLiveData<Int> by lazy {
-        MutableLiveData<Int>().also { it.value = 0 }
+        MutableLiveData<Int>().also { it.value = 100 }
     }
 
     suspend fun getPhotos(sortKey: SortKey) = withContext(Dispatchers.IO) {

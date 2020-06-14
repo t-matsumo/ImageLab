@@ -3,7 +3,6 @@
     <string name="image_description">image</string>
     <string name="photo_permission_denied">画像の読み込みが拒否されたので、画像を表示できません。</string>
     <string name="photo_permission_description">画像の読み込みを許可しないと、画像を表示できません。</string>
-    <string name="delete_image_index">アプリ内情報削除</string>
     <string name="create_image_index">画像の読み込み</string>
     <string name="sort_by_date_added">日付で昇順にソート</string>
     <string name="sort_by_date_added_desc">日付で降順にソート</string>

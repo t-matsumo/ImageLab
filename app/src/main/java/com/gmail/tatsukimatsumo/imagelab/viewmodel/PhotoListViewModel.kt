@@ -35,23 +35,15 @@ class PhotoListViewModel(application: Application) : AndroidViewModel(applicatio
 
     fun onCreate() {
         viewModelScope.launch {
-            useCase.deleteImageIndex()
-            useCase.refreshImageDatabase()
             photoList.value = getPhotos()
         }
     }
 
     fun onTapCreateImageIndex() {
         viewModelScope.launch {
+            useCase.deleteImageIndex()
             useCase.refreshImageDatabase()
             photoList.value = getPhotos()
-        }
-    }
-
-    fun onTapDeleteImageIndex() {
-        viewModelScope.launch {
-            useCase.deleteImageIndex()
-            photoList.value = emptyList()
         }
     }
 
