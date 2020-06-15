@@ -2,6 +2,7 @@ package com.gmail.tatsukimatsumo.imagelab.model.repository
 
 import android.net.Uri
 import androidx.core.net.toUri
+import androidx.lifecycle.LiveData
 import com.gmail.tatsukimatsumo.imagelab.model.datasource.photodatabase.Photo
 
 interface PhotoIndexRepository {
@@ -20,7 +21,9 @@ interface PhotoIndexRepository {
         constructor(photo: Photo) : this(photo.uriString.toUri(), photo.dateAdded, photo.norm)
     }
 
-    suspend fun getPhotos(sortKey: SortKey): List<PhotoIndexEntity>
+    val photoList: LiveData<List<Photo>>
+//    suspend fun getPhotosAsync(sortKey: SortKey): LiveData<List<Photo>>
     suspend fun addAll(entities: List<PhotoIndexEntity>)
+    suspend fun insert(entity: PhotoIndexEntity)
     suspend fun deleteAll()
 }

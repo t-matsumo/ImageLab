@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.gmail.tatsukimatsumo.imagelab.model.datasource.photocontentsresolver.PhotoContentsProviderClientRepository
+import com.gmail.tatsukimatsumo.imagelab.model.datasource.photodatabase.Photo
 import com.gmail.tatsukimatsumo.imagelab.model.datasource.photodatabase.PhotoDatabaseRepository
 import com.gmail.tatsukimatsumo.imagelab.model.imageloder.ContentsProviderImageLoader
 import com.gmail.tatsukimatsumo.imagelab.model.repository.PhotoIndexRepository.PhotoIndexEntity
@@ -15,19 +16,18 @@ import com.gmail.tatsukimatsumo.imagelab.model.usecase.PhotoUseCase
 import kotlinx.coroutines.launch
 
 class PhotoListViewModel(application: Application) : AndroidViewModel(application) {
-    data class Photo(
-        val url: Uri,
-        val norm: Int
-    ) {
-        constructor(photoIndexEntity: PhotoIndexEntity) : this(
-            photoIndexEntity.uri,
-            photoIndexEntity.norm
-        )
-    }
+//    data class Photo(
+//        val url: Uri,
+//        val norm: Int
+//    ) {
+//        constructor(photoIndexEntity: PhotoIndexEntity) : this(
+//            photoIndexEntity.uri,
+//            photoIndexEntity.norm
+//        )
+//    }
 
     private val _photoList = MutableLiveData<List<Photo>>().also { it.value = emptyList() }
-    val photoList: LiveData<List<Photo>> = _photoList
-
+    val photoList: LiveData<List<Photo>>
     val loadProgress: LiveData<Int>
 
     private val useCase: PhotoUseCase
@@ -37,16 +37,20 @@ class PhotoListViewModel(application: Application) : AndroidViewModel(applicatio
         val indexRepository = PhotoDatabaseRepository(application.applicationContext)
         val imageLoader = ContentsProviderImageLoader(application.applicationContext)
         useCase = PhotoUseCase(repository, indexRepository, imageLoader)
+        photoList = useCase.photoList
         loadProgress = useCase.progress
     }
 
     fun onCreate() = reflectToViewSortBy()
 
     fun onTapCreateImageIndex() {
+//        viewModelScope.launch {
+//            _photoList.value = getPhotosAsync()
+//        }
+
         viewModelScope.launch {
-            useCase.deleteImageIndex()
+//            useCase.deleteImageIndex()
             useCase.refreshImageDatabase()
-            _photoList.value = getPhotos()
         }
     }
 
@@ -55,9 +59,9 @@ class PhotoListViewModel(application: Application) : AndroidViewModel(applicatio
     fun sortByNorm () = reflectToViewSortBy(SortKey.SORT_KEY_NORM)
 
     fun reflectToViewSortBy(sortKey: SortKey = SortKey.SORT_KEY_NONE) {
-        viewModelScope.launch {
-            _photoList.value = getPhotos(sortKey)
-        }
+//        viewModelScope.launch {
+//            _photoList.value = getPhotos(sortKey)
+//        }
     }
-    private suspend fun getPhotos(sortKey: SortKey = SortKey.SORT_KEY_NONE) = useCase.getPhotos(sortKey).map { Photo(it) }
+//    private suspend fun getPhotos(sortKey: SortKey = SortKey.SORT_KEY_NONE) = useCase.getPhotos(sortKey).map { Photo(it) }
 }

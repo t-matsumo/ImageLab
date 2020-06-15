@@ -22,33 +22,31 @@ class PhotoUseCase(
     private val _progress = MutableLiveData<Int>().also { it.value = 100 }
     val progress: LiveData<Int> = _progress
 
-    suspend fun getPhotos(sortKey: SortKey) = withContext(Dispatchers.IO) {
-        indexRepository.getPhotos(sortKey)
-    }
+    val photoList = indexRepository.photoList
+
+//    suspend fun getPhotos(sortKey: SortKey) = withContext(Dispatchers.IO) {
+//        indexRepository.getPhotosAsync(sortKey)
+//    }
 
     suspend fun refreshImageDatabase() = withContext(Dispatchers.IO) {
-            val photos = repository.getPhotos()
-            val count = photos.size
-            var current = 0
-            withContext(Dispatchers.Main) {
-                _progress.value = 0
-            }
-            photos
-                .map {
-                    val entity = createPhotoDatabaseEntity(it)
-
-                    current++
-                    withContext(Dispatchers.Main) {
-                        val progressValue = 100 * current / count
-                        if (progressValue != _progress.value) {
-                            _progress.value = progressValue
-                        }
-                    }
-
-                    entity
-                }
-                .let { indexRepository.addAll(it) }
+        val photos = repository.getPhotos()
+        val count = photos.size
+        withContext(Dispatchers.Main) {
+            _progress.value = 0
         }
+
+        for ((i, p) in photos.withIndex()) {
+            val entity = createPhotoDatabaseEntity(p)
+            indexRepository.insert(entity)
+
+            withContext(Dispatchers.Main) {
+                val progressValue = 100 * (i + 1) / count
+                if (progressValue != _progress.value) {
+                    _progress.value = progressValue
+                }
+            }
+        }
+    }
 
     suspend fun deleteImageIndex() = withContext(Dispatchers.IO) {
         indexRepository.deleteAll()

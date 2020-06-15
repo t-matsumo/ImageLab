@@ -1,6 +1,9 @@
 package com.gmail.tatsukimatsumo.imagelab.model.datasource.photodatabase
 
 import android.content.Context
+import android.net.Uri
+import androidx.core.net.toUri
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.gmail.tatsukimatsumo.imagelab.model.repository.PhotoIndexRepository.PhotoIndexEntity
 
@@ -11,6 +14,8 @@ data class Photo(
     val dateAdded: Int,
     val norm: Int
 ) {
+    @Ignore val uri: Uri = uriString.toUri()
+
     constructor(photoEntity: PhotoIndexEntity) : this(
         0,
         photoEntity.uri.toString(),
@@ -22,13 +27,16 @@ data class Photo(
 @Dao
 interface PhotoDao {
     @Query("SELECT * FROM photo")
-    fun getAll(): List<Photo>
+    fun getAllAsync(): LiveData<List<Photo>>
 
     @Query("DELETE FROM photo")
     fun deleteAll()
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun addAll(photos: List<Photo>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insert(photo: Photo)
 }
 
 @Database(entities = [Photo::class], version = 1, exportSchema = false)
