@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {
             layoutManager = viewManager
             adapter = viewAdapter
         }
-        viewModel.photoList.observe(this, Observer { _ ->
+        viewModel.sortKey.observe(this, Observer { _ ->
             photoListView.scrollToPosition(0)
         })
 

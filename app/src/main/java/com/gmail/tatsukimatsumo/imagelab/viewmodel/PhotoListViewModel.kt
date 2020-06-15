@@ -12,11 +12,16 @@ import kotlinx.coroutines.launch
 
 class PhotoListViewModel(application: Application) : AndroidViewModel(application) {
     val photoList: LiveData<List<Photo>>
-    private val sortKey: MutableLiveData<SortKey> by lazy {
+    val progress: LiveData<Int>
+
+
+    private val _sortKey: MutableLiveData<SortKey> by lazy {
         MutableLiveData<SortKey>().also { it.value = SortKey.SORT_KEY_NONE }
     }
+    val sortKey: LiveData<SortKey> = _sortKey
 
     private val useCase: PhotoUseCase
+
 
     init {
         val repository = PhotoContentsProviderClientRepository(application.applicationContext)
@@ -25,6 +30,7 @@ class PhotoListViewModel(application: Application) : AndroidViewModel(applicatio
         useCase = PhotoUseCase(repository, indexRepository, imageLoader)
 
         photoList = Transformations.switchMap(sortKey, useCase::getPhotosLiveDataSortedBy)
+        progress = useCase.progress
     }
 
     fun onCreate() {
@@ -50,6 +56,6 @@ class PhotoListViewModel(application: Application) : AndroidViewModel(applicatio
     fun sortByNorm() = reflectToViewSortBy(SortKey.SORT_KEY_NORM)
 
     private fun reflectToViewSortBy(sortKey: SortKey = SortKey.SORT_KEY_NONE) {
-        this.sortKey.value = sortKey
+        this._sortKey.value = sortKey
     }
 }

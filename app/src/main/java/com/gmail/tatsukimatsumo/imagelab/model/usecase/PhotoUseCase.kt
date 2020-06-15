@@ -18,6 +18,7 @@ class PhotoUseCase(
     private val imageLoader: ImageLoader
 ) {
     private val _progress = MutableLiveData<Int>().also { it.value = 100 }
+    val progress = _progress
 
     fun getPhotosLiveDataSortedBy(sortKey: SortKey) = indexRepository.getPhotosLiveDataSortedBy(sortKey)
 
@@ -31,14 +32,16 @@ class PhotoUseCase(
 
         val insertingPhoto = photos.filter { tmpSet.contains(it.uri) }
         val count = insertingPhoto.size
-        _progress.postValue(0)
-        for ((i, p) in insertingPhoto.withIndex()) {
-            val entity = createPhotoDatabaseEntity(p)
-            indexRepository.insert(entity)
+        if (count != 0) {
+            _progress.postValue(0)
+            for ((i, p) in insertingPhoto.withIndex()) {
+                val entity = createPhotoDatabaseEntity(p)
+                indexRepository.insert(entity)
 
-            val progressValue = 100 * (i + 1) / count
-            if (progressValue != _progress.value) {
-                _progress.postValue(progressValue)
+                val progressValue = 100 * (i + 1) / count
+                if (progressValue != _progress.value) {
+                    _progress.postValue(progressValue)
+                }
             }
         }
     }
