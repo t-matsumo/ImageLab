@@ -40,7 +40,7 @@ class PhotoListViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     fun onTapRefreshImageIndex() {
-        viewModelScope.launch {
+         viewModelScope.launch {
             useCase.refreshImageDatabase()
         }
     }

@@ -17,4 +17,4 @@ This app only read images on device (do not write and delete images).
 - LiveDataのsetValueをバックグラウンドで実行しようとして落ちてた。
     postValueを使って解決
 - 非同期処理のキャンセルを実装しないせいで、読み込み→データ削除を順に実行すると読み込みが続く
-    キャンセルを実行
+    キャンセルを実行??今の作りだと難しくない？？？
