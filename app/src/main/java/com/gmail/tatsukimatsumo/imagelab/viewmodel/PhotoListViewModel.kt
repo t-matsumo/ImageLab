@@ -19,55 +19,45 @@ class PhotoListViewModel(application: Application) : AndroidViewModel(applicatio
         val url: Uri,
         val norm: Int
     ) {
-        constructor(photoIndexEntity: PhotoIndexEntity) : this(photoIndexEntity.uri, photoIndexEntity.norm)
+        constructor(photoIndexEntity: PhotoIndexEntity) : this(
+            photoIndexEntity.uri,
+            photoIndexEntity.norm
+        )
     }
 
-    val photoList: MutableLiveData<List<Photo>> by lazy {
-        MutableLiveData<List<Photo>>().also { it.value = emptyList() }
-    }
+    private val _photoList = MutableLiveData<List<Photo>>().also { it.value = emptyList() }
+    val photoList: LiveData<List<Photo>> = _photoList
 
     val loadProgress: LiveData<Int>
 
-    private val repository = PhotoContentsProviderClientRepository(application.applicationContext)
-    private val indexRepository = PhotoDatabaseRepository(application.applicationContext)
-    private val imageLoader = ContentsProviderImageLoader(application.applicationContext)
-    private val useCase = PhotoUseCase(repository, indexRepository, imageLoader)
+    private val useCase: PhotoUseCase
 
     init {
+        val repository = PhotoContentsProviderClientRepository(application.applicationContext)
+        val indexRepository = PhotoDatabaseRepository(application.applicationContext)
+        val imageLoader = ContentsProviderImageLoader(application.applicationContext)
+        useCase = PhotoUseCase(repository, indexRepository, imageLoader)
         loadProgress = useCase.progress
     }
 
-    fun onCreate() {
-        viewModelScope.launch {
-            photoList.value = getPhotos()
-        }
-    }
+    fun onCreate() = reflectToViewSortBy()
 
     fun onTapCreateImageIndex() {
         viewModelScope.launch {
             useCase.deleteImageIndex()
             useCase.refreshImageDatabase()
-            photoList.value = getPhotos()
+            _photoList.value = getPhotos()
         }
     }
 
-    fun sortByDateAdded() {
+    fun sortByDateAdded() = reflectToViewSortBy(SortKey.SORT_KEY_DATE_ADDED)
+    fun sortByDateAddedDesc() = reflectToViewSortBy(SortKey.SORT_KEY_DATE_ADDED_DESC)
+    fun sortByNorm () = reflectToViewSortBy(SortKey.SORT_KEY_NORM)
+
+    fun reflectToViewSortBy(sortKey: SortKey = SortKey.SORT_KEY_NONE) {
         viewModelScope.launch {
-            photoList.value = getPhotos(SortKey.SORT_KEY_DATE_ADDED)
+            _photoList.value = getPhotos(sortKey)
         }
     }
-
-    fun sortByDateAddedDesc() {
-        viewModelScope.launch {
-            photoList.value = getPhotos(SortKey.SORT_KEY_DATE_ADDED_DESC)
-        }
-    }
-
-    fun sortByNorm () {
-        viewModelScope.launch {
-            photoList.value = getPhotos(SortKey.SORT_KEY_NORM)
-        }
-    }
-
     private suspend fun getPhotos(sortKey: SortKey = SortKey.SORT_KEY_NONE) = useCase.getPhotos(sortKey).map { Photo(it) }
 }
