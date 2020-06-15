@@ -29,11 +29,20 @@ interface PhotoDao {
     @Query("SELECT * FROM photo")
     fun getAllAsync(): LiveData<List<Photo>>
 
+    @Query("SELECT * FROM photo ORDER BY dateAdded")
+    fun getAllAsyncSortedByDateAdded(): LiveData<List<Photo>>
+
+    @Query("SELECT * FROM photo ORDER BY dateAdded DESC")
+    fun getAllAsyncSortedByDateAddedDesc(): LiveData<List<Photo>>
+
+    @Query("SELECT * FROM photo ORDER BY norm")
+    fun getAllAsyncSortedByNorm(): LiveData<List<Photo>>
+
+    @Query("SELECT * FROM photo")
+    fun getAllPhotos():List<Photo>
+
     @Query("DELETE FROM photo")
     fun deleteAll()
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun addAll(photos: List<Photo>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(photo: Photo)

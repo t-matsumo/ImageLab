@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/create_image_index"
+    <item android:id="@+id/delete_image_index"
+        android:icon="@android:drawable/ic_search_category_default"
+        android:title="@string/delete_image_index" />
+    <item android:id="@+id/refresh_image_index"
         android:icon="@android:drawable/ic_search_category_default"
         android:title="@string/create_image_index" />
     <item android:id="@+id/sort_by_date_added"

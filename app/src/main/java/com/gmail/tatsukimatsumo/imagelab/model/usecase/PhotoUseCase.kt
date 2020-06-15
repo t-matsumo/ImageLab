@@ -1,6 +1,5 @@
 package com.gmail.tatsukimatsumo.imagelab.model.usecase
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.gmail.tatsukimatsumo.imagelab.model.imageloder.ImageLoader
 import com.gmail.tatsukimatsumo.imagelab.model.repository.PhotoIndexRepository
@@ -18,32 +17,28 @@ class PhotoUseCase(
     private val indexRepository: PhotoIndexRepository,
     private val imageLoader: ImageLoader
 ) {
-
     private val _progress = MutableLiveData<Int>().also { it.value = 100 }
-    val progress: LiveData<Int> = _progress
 
-    val photoList = indexRepository.photoList
-
-//    suspend fun getPhotos(sortKey: SortKey) = withContext(Dispatchers.IO) {
-//        indexRepository.getPhotosAsync(sortKey)
-//    }
+    fun getPhotosLiveDataSortedBy(sortKey: SortKey) = indexRepository.getPhotosLiveDataSortedBy(sortKey)
 
     suspend fun refreshImageDatabase() = withContext(Dispatchers.IO) {
         val photos = repository.getPhotos()
-        val count = photos.size
-        withContext(Dispatchers.Main) {
-            _progress.value = 0
-        }
 
-        for ((i, p) in photos.withIndex()) {
+        // まだ存在していないデータのみ挿入
+        val photoUriSet = photos.map { it.uri }.toSet()
+        val photoIndexUriSet = indexRepository.getAllPhotos().map { it.uri }.toSet()
+        val tmpSet = photoUriSet - photoIndexUriSet
+
+        val insertingPhoto = photos.filter { tmpSet.contains(it.uri) }
+        val count = insertingPhoto.size
+        _progress.postValue(0)
+        for ((i, p) in insertingPhoto.withIndex()) {
             val entity = createPhotoDatabaseEntity(p)
             indexRepository.insert(entity)
 
-            withContext(Dispatchers.Main) {
-                val progressValue = 100 * (i + 1) / count
-                if (progressValue != _progress.value) {
-                    _progress.value = progressValue
-                }
+            val progressValue = 100 * (i + 1) / count
+            if (progressValue != _progress.value) {
+                _progress.postValue(progressValue)
             }
         }
     }

@@ -76,8 +76,12 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.create_image_index -> {
-                viewModel.onTapCreateImageIndex()
+            R.id.delete_image_index -> {
+                viewModel.onTapDeleteImageIndex()
+                true
+            }
+            R.id.refresh_image_index -> {
+                viewModel.onTapRefreshImageIndex()
                 true
             }
             R.id.sort_by_date_added -> {
