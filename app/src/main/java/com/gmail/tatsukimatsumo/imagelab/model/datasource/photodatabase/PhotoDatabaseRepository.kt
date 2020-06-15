@@ -1,14 +1,13 @@
 package com.gmail.tatsukimatsumo.imagelab.model.datasource.photodatabase
 
 import android.content.Context
-import androidx.core.net.toUri
 import com.gmail.tatsukimatsumo.imagelab.model.repository.PhotoIndexRepository
-import com.gmail.tatsukimatsumo.imagelab.model.repository.PhotoIndexRepository.PhotoDatabaseEntity
+import com.gmail.tatsukimatsumo.imagelab.model.repository.PhotoIndexRepository.PhotoIndexEntity
 import com.gmail.tatsukimatsumo.imagelab.model.repository.PhotoIndexRepository.SortKey
 import com.gmail.tatsukimatsumo.imagelab.model.repository.PhotoIndexRepository.SortKey.*
 
 class PhotoDatabaseRepository(private val context: Context) : PhotoIndexRepository {
-    override suspend fun getPhotos(sortKey: SortKey): List<PhotoDatabaseEntity> {
+    override suspend fun getPhotos(sortKey: SortKey): List<PhotoIndexEntity> {
         val dao = PhotoDatabase
             .getDatabase(context)
             .photoDao()
@@ -19,7 +18,7 @@ class PhotoDatabaseRepository(private val context: Context) : PhotoIndexReposito
                 entities // do nothing
             }
             SORT_KEY_DATE_ADDED,
-            SORT_KEY_DATE_ADDED_DESC -> entities.sortedBy { it.date_added }
+            SORT_KEY_DATE_ADDED_DESC -> entities.sortedBy { it.dateAdded }
             SORT_KEY_NORM -> entities.sortedBy { it.norm }
         }
 
@@ -27,13 +26,13 @@ class PhotoDatabaseRepository(private val context: Context) : PhotoIndexReposito
             entities = entities.reversed()
         }
 
-        return entities.map { PhotoDatabaseEntity(it.uriString.toUri(), it.date_added, it.norm) }
+        return entities.map { PhotoIndexEntity(it) }
     }
 
-    override suspend fun addAll(entities: List<PhotoDatabaseEntity>) = PhotoDatabase
+    override suspend fun addAll(entities: List<PhotoIndexEntity>) = PhotoDatabase
         .getDatabase(context)
         .photoDao()
-        .addAll(entities.mapIndexed { index, v ->  Photo(index, v.uri.toString(), v.dateAdded, v.norm) })
+        .addAll(entities.map { Photo(it) })
 
     override suspend fun deleteAll() = PhotoDatabase
         .getDatabase(context)

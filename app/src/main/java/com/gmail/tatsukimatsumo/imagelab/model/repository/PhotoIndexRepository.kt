@@ -1,6 +1,8 @@
 package com.gmail.tatsukimatsumo.imagelab.model.repository
 
 import android.net.Uri
+import androidx.core.net.toUri
+import com.gmail.tatsukimatsumo.imagelab.model.datasource.photodatabase.Photo
 
 interface PhotoIndexRepository {
     enum class SortKey(val desc: Boolean = false) {
@@ -10,9 +12,15 @@ interface PhotoIndexRepository {
         SORT_KEY_NORM,
     }
 
-    data class PhotoDatabaseEntity(val uri: Uri, val dateAdded: Int, val norm: Int)
+    data class PhotoIndexEntity(
+        val uri: Uri,
+        val dateAdded: Int,
+        val norm: Int
+    ) {
+        constructor(photo: Photo) : this(photo.uriString.toUri(), photo.dateAdded, photo.norm)
+    }
 
-    suspend fun getPhotos(sortKey: SortKey): List<PhotoDatabaseEntity>
-    suspend fun addAll(entities: List<PhotoDatabaseEntity>)
+    suspend fun getPhotos(sortKey: SortKey): List<PhotoIndexEntity>
+    suspend fun addAll(entities: List<PhotoIndexEntity>)
     suspend fun deleteAll()
 }

@@ -9,14 +9,18 @@ import androidx.lifecycle.viewModelScope
 import com.gmail.tatsukimatsumo.imagelab.model.datasource.photocontentsresolver.PhotoContentsProviderClientRepository
 import com.gmail.tatsukimatsumo.imagelab.model.datasource.photodatabase.PhotoDatabaseRepository
 import com.gmail.tatsukimatsumo.imagelab.model.imageloder.ContentsProviderImageLoader
+import com.gmail.tatsukimatsumo.imagelab.model.repository.PhotoIndexRepository.PhotoIndexEntity
+import com.gmail.tatsukimatsumo.imagelab.model.repository.PhotoIndexRepository.SortKey
 import com.gmail.tatsukimatsumo.imagelab.model.usecase.PhotoUseCase
-import com.gmail.tatsukimatsumo.imagelab.model.usecase.PhotoUseCase.SortKey
 import kotlinx.coroutines.launch
-import org.opencv.android.Utils
-import org.opencv.core.Mat
 
 class PhotoListViewModel(application: Application) : AndroidViewModel(application) {
-    data class Photo(val url: Uri, val norm: Int)
+    data class Photo(
+        val url: Uri,
+        val norm: Int
+    ) {
+        constructor(photoIndexEntity: PhotoIndexEntity) : this(photoIndexEntity.uri, photoIndexEntity.norm)
+    }
 
     val photoList: MutableLiveData<List<Photo>> by lazy {
         MutableLiveData<List<Photo>>().also { it.value = emptyList() }
@@ -65,5 +69,5 @@ class PhotoListViewModel(application: Application) : AndroidViewModel(applicatio
         }
     }
 
-    private suspend fun getPhotos(sortKey: SortKey = SortKey.SORT_KEY_NONE) = useCase.getPhotos(sortKey).map { Photo(it.uri, it.norm) }
+    private suspend fun getPhotos(sortKey: SortKey = SortKey.SORT_KEY_NONE) = useCase.getPhotos(sortKey).map { Photo(it) }
 }

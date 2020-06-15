@@ -3,18 +3,23 @@ package com.gmail.tatsukimatsumo.imagelab.model.datasource.photocontentsresolver
 import android.content.ContentUris
 import android.content.Context
 import android.net.Uri
-import android.provider.MediaStore
+import android.provider.MediaStore.Images.Media.*
 import com.gmail.tatsukimatsumo.imagelab.model.repository.PhotoRepository
 import com.gmail.tatsukimatsumo.imagelab.model.repository.PhotoRepository.PhotoEntity
 
 class PhotoContentsProviderClientRepository(private val context: Context) : PhotoRepository {
     override suspend fun getPhotos(): List<PhotoEntity> {
+        val projection = arrayOf(
+            _ID,
+            DATE_ADDED
+        )
         val cursor = context.contentResolver.query(
-            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+            EXTERNAL_CONTENT_URI,
+            projection,
             null,
             null,
-            null,
-            null)
+            null
+        )
 
         if (cursor == null || cursor.moveToFirst() == false) {
             return emptyList()
@@ -22,11 +27,11 @@ class PhotoContentsProviderClientRepository(private val context: Context) : Phot
 
         val photos = mutableListOf<PhotoEntity>()
         do {
-            val idIndex = cursor.getColumnIndex(MediaStore.Images.Media._ID)
+            val idIndex = cursor.getColumnIndex(_ID)
             val id = cursor.getLong(idIndex)
-            val uri: Uri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
+            val uri: Uri = ContentUris.withAppendedId(EXTERNAL_CONTENT_URI, id)
 
-            val dataAddedIndex = cursor.getColumnIndex(MediaStore.Images.Media.DATE_ADDED)
+            val dataAddedIndex = cursor.getColumnIndex(DATE_ADDED)
             val dataAdded = cursor.getInt(dataAddedIndex)
 
             photos.add(PhotoEntity(uri, dataAdded))
